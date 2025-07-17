@@ -25,13 +25,13 @@ const MODULES_TO_STUB = [
 // Stub implementations
 const STUBS = {
     'react-native': {
-        Platform: { OS: 'web', isPad: false, isTV: false, isTesting: false, Version: '0.0.0' },
+        Platform: {OS: 'web', isPad: false, isTV: false, isTesting: false, Version: '0.0.0'},
         NativeModules: {},
-        Dimensions: { get: () => ({ width: 1024, height: 768 }) },
-        AppState: { currentState: 'active' },
+        Dimensions: {get: () => ({width: 1024, height: 768})},
+        AppState: {currentState: 'active'},
         Linking: {},
-        DeviceEventEmitter: { emit: () => {}, addListener: () => ({}) },
-        PixelRatio: { get: () => 1, getFontScale: () => 1 },
+        DeviceEventEmitter: {emit: () => {}, addListener: () => ({})},
+        PixelRatio: {get: () => 1, getFontScale: () => 1},
     },
     'react-native-config': {},
     'react-native-key-command': {
@@ -58,13 +58,13 @@ const STUBS = {
 };
 
 // Override require to intercept React Native modules
-Module.prototype.require = function(id, ...args) {
+Module.prototype.require = function (id, ...args) {
     // Check if this is a module we want to stub
     if (MODULES_TO_STUB.includes(id) || id.startsWith('react-native')) {
         const stub = STUBS[id] || {};
-        return { __esModule: true, default: stub, ...stub };
+        return {__esModule: true, default: stub, ...stub};
     }
-    
+
     // For other modules, use original require
     return originalRequire.apply(this, args);
 };
