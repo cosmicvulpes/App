@@ -2594,7 +2594,7 @@ const translations = {
             afterWeek: 'A week',
             custom: 'Custom',
         },
-        untilTomorrow: 'Until tomorrow',
+        untilTomorrow: 'Until tomorrow eh',
         untilTime: ({time}: UntilTimeParams) => `Until ${time}`,
         date: 'Date',
         time: 'Time',
