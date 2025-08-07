@@ -41,6 +41,7 @@ import StartupTimer from './libs/StartupTimer';
 // This lib needs to be imported, but it has nothing to export since all it contains is an Onyx connection
 import './libs/UnreadIndicatorUpdater';
 import Visibility from './libs/Visibility';
+import {decodeLastRoute} from '@libs/saveLastRoute/utils';
 import ONYXKEYS from './ONYXKEYS';
 import PopoverReportActionContextMenu from './pages/home/report/ContextMenu/PopoverReportActionContextMenu';
 import * as ReportActionContextMenu from './pages/home/report/ContextMenu/ReportActionContextMenu';
@@ -238,8 +239,11 @@ function Expensify() {
         if (!isNavigationReady || !lastRoute) {
             return;
         }
+        const routeToNavigate = decodeLastRoute(lastRoute as string);
         updateLastRoute('');
-        Navigation.navigate(lastRoute as Route);
+        if (routeToNavigate) {
+            Navigation.navigate(routeToNavigate as Route);
+        }
         // Disabling this rule because we only want it to run on the first render.
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, [isNavigationReady]);
