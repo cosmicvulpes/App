@@ -87,6 +87,14 @@ class AppDelegate: ExpoAppDelegate, UNUserNotificationCenterDelegate {
   func handleKeyCommand(_ keyCommand: UIKeyCommand) {
       HardwareShortcuts.sharedInstance().handleKeyCommand(keyCommand)
   }
+  
+  override func applicationWillTerminate(_ application: UIApplication) {
+      // This method is called when the app is about to terminate.
+      // It is NOT called when the user force-quits the app.
+      // We use this to mark that the app was terminated gracefully by the system
+      // (e.g., after changing permissions in Settings), not by the user.
+      UserDefaults.standard.set(true, forKey: "appTerminatedGracefully")
+  }
 }
 
 class ReactNativeDelegate: ExpoReactNativeFactoryDelegate {

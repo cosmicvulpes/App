@@ -22,6 +22,7 @@ import useOnyx from './hooks/useOnyx';
 import usePriorityMode from './hooks/usePriorityChange';
 import {updateLastRoute} from './libs/actions/App';
 import {disconnect} from './libs/actions/Delegate';
+import useLastRouteWithTerminationCheck from './hooks/useLastRouteWithTerminationCheck';
 import * as EmojiPickerAction from './libs/actions/EmojiPickerAction';
 import * as Report from './libs/actions/Report';
 import * as User from './libs/actions/User';
@@ -95,7 +96,6 @@ function Expensify() {
     const {translate, preferredLocale} = useLocalize();
     const [account] = useOnyx(ONYXKEYS.ACCOUNT, {canBeMissing: true});
     const [session] = useOnyx(ONYXKEYS.SESSION, {canBeMissing: true});
-    const [lastRoute] = useOnyx(ONYXKEYS.LAST_ROUTE, {canBeMissing: true});
     const [userMetadata] = useOnyx(ONYXKEYS.USER_METADATA, {canBeMissing: true});
     const [isCheckingPublicRoom = true] = useOnyx(ONYXKEYS.IS_CHECKING_PUBLIC_ROOM, {initWithStoredValues: false, canBeMissing: true});
     const [updateAvailable] = useOnyx(ONYXKEYS.UPDATE_AVAILABLE, {initWithStoredValues: false, canBeMissing: true});
@@ -236,15 +236,17 @@ function Expensify() {
         Audio.setAudioModeAsync({playsInSilentModeIOS: true});
     }, []);
 
+    const lastRouteToNavigate = useLastRouteWithTerminationCheck();
+
     useLayoutEffect(() => {
-        if (!isNavigationReady || !lastRoute) {
+        if (!isNavigationReady || !lastRouteToNavigate) {
             return;
         }
         updateLastRoute('');
-        Navigation.navigate(lastRoute as Route);
+        Navigation.navigate(lastRouteToNavigate as Route);
         // Disabling this rule because we only want it to run on the first render.
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
-    }, [isNavigationReady]);
+    }, [isNavigationReady, lastRouteToNavigate]);
 
     useEffect(() => {
         if (!isAuthenticated) {
